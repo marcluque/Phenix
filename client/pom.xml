@@ -11,5 +11,11 @@
 
     <artifactId>phenix-client</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>de.datasec</groupId>
+            <artifactId>phenix-shared</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
