@@ -1,6 +1,6 @@
-package de.datasec.phenix.shared.network.packetsystem.packets;
+package de.datasec.phenix.shared.packetsystem.packets;
 
-import de.datasec.phenix.shared.network.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.Packet;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;

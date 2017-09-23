@@ -1,7 +1,7 @@
-package de.datasec.phenix.shared.network.packetsystem.serialize;
+package de.datasec.phenix.shared.packetsystem.serialize;
 
 import de.datasec.phenix.shared.Protocol;
-import de.datasec.phenix.shared.network.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;

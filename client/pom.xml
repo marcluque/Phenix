@@ -12,6 +12,7 @@
     <artifactId>phenix-client</artifactId>
 
     <dependencies>
+        <!-- Phenix shared -->
         <dependency>
             <groupId>de.datasec</groupId>
             <artifactId>phenix-shared</artifactId>

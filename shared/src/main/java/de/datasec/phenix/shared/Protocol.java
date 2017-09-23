@@ -1,6 +1,6 @@
 package de.datasec.phenix.shared;
 
-import de.datasec.phenix.shared.network.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.Packet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,6 @@ public class Protocol {
     private Map<Class<? extends Packet>, Byte> packetBytes = new HashMap<>();
 
     public void registerPacket(byte id, Class<? extends Packet> clazz) {
-
         if(clazz == null) {
             throw new IllegalArgumentException("clazz cannot be null");
         }
@@ -25,6 +24,7 @@ public class Protocol {
         }
 
         packets.put(id, clazz);
+        packetBytes.put(clazz, id);
     }
 
     public Packet createPacket(byte id) {

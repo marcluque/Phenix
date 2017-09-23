@@ -1,6 +1,6 @@
-package de.datasec.phenix.server.handler;
+package de.datasec.phenix.client.handler;
 
-import de.datasec.phenix.server.listener.PhenixServerPacketListener;
+import de.datasec.phenix.client.listener.PhenixClientPacketListener;
 import de.datasec.phenix.shared.PacketListener;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,21 +9,19 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 /**
  * Created by DataSec on 20.09.2017.
  */
-public class PhenixServerHandler extends ChannelInboundHandlerAdapter {
+public class PhenixClientHandler extends ChannelInboundHandlerAdapter {
 
-    private PhenixServerPacketListener packetListener;
+    private PhenixClientPacketListener packetListener;
 
-    public PhenixServerHandler(PacketListener packetListener) {
-        this.packetListener = (PhenixServerPacketListener) packetListener;
+    public PhenixClientHandler(PacketListener packetListener) {
+        this.packetListener = (PhenixClientPacketListener) packetListener;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
-        System.out.println("GOT SOMETHING");
         if (packet instanceof GetPacket) {
-            System.out.println(((GetPacket) packet).getValue());
+            packetListener.onGetPacket((GetPacket) packet);
         }
-        context.writeAndFlush(new GetPacket(1, "Object1"));
     }
 
     @Override

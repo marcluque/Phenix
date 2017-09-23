@@ -1,7 +1,9 @@
 package de.datasec.phenix.client;
 
-import de.datasec.phenix.client.network.Client;
-import de.datasec.phenix.shared.network.packetsystem.packets.GetPacket;
+import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Created by DataSec on 05.09.2017.
@@ -15,11 +17,8 @@ public class PhenixClient {
     private Client client;
 
     public PhenixClient(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
+        client = new Client(host, port);
 
-    public void start() {
         // Open connection
         try {
             client.start();
@@ -28,10 +27,15 @@ public class PhenixClient {
         }
     }
 
-    public <V> V get(Object key) {
+    public <T> T get(Object key) {
         // TODO: CREATE ID
-        // TODO: HANDLE RESPONSE OF send() WITH FUTURE
-        client.send(new GetPacket(0, key));
+        Future<Object> future = client.send(new GetPacket(0, key));
+
+        try {
+            return (T) future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }

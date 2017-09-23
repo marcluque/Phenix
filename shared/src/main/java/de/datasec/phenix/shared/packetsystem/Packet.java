@@ -1,4 +1,4 @@
-package de.datasec.phenix.shared.network.packetsystem;
+package de.datasec.phenix.shared.packetsystem;
 
 import io.netty.buffer.ByteBuf;
 
