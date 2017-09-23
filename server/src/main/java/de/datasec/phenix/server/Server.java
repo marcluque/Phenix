@@ -3,7 +3,7 @@ package de.datasec.phenix.server;
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
-import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -26,7 +26,7 @@ public class Server {
         this.port = port;
 
         protocol = new Protocol();
-        protocol.registerPacket((byte) 5, Packet.class);
+        protocol.registerPacket((byte) 5, GetPacket.class);
 
         packetListener = new PhenixServerPacketListener();
     }

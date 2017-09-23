@@ -19,9 +19,7 @@ public class PhenixClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
-        if (packet instanceof GetPacket) {
-            packetListener.onGetPacket((GetPacket) packet);
-        }
+        packetListener.onGetPacket((GetPacket) packet);
     }
 
     @Override

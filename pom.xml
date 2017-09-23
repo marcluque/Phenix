@@ -12,6 +12,7 @@
         <module>server</module>
         <module>shared</module>
         <module>client</module>
+        <module>tests</module>
     </modules>
 
     <name>Phenix</name>

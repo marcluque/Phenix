@@ -14,9 +14,13 @@ public class GetPacket extends Packet {
 
     private Object value;
 
-    public GetPacket(int id, Object value) {
-        this.id = id;
+    public GetPacket() {
+        // Needs an empty constructor for protocol
+    }
+
+    public GetPacket(Object value) {
         this.value = value;
+        id = 0;
     }
 
     @Override

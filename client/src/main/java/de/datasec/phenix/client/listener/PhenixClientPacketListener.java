@@ -1,5 +1,6 @@
 package de.datasec.phenix.client.listener;
 
+import de.datasec.phenix.client.Client;
 import de.datasec.phenix.shared.PacketListener;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 
@@ -8,9 +9,13 @@ import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
  */
 public class PhenixClientPacketListener implements PacketListener {
 
-    private Object value;
+    private Client client;
+
+    public PhenixClientPacketListener(Client client) {
+        this.client = client;
+    }
 
     public void onGetPacket(GetPacket packet) {
-        System.out.println("Received packet from server: " + packet.getValue());
+        client.setResponseObject(packet.getValue());
     }
 }

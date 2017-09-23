@@ -3,7 +3,7 @@ import de.datasec.phenix.client.PhenixClient;
 /**
  * Created by DataSec on 23.09.2017.
  */
-public class Test {
+public class MainClient {
 
     public static void main(String[] args) {
         PhenixClient phenixClient = new PhenixClient("localhost", 8080);

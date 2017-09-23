@@ -27,16 +27,13 @@ public class Client {
 
     private Protocol protocol;
 
-    private PhenixClientPacketListener packetListener;
+    private PhenixClientPacketListener packetListener = new PhenixClientPacketListener(this);
 
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    private AtomicReference<Object> responseObject;
+    private AtomicReference<Object> responseObject = new AtomicReference<>();
 
-    private CountDownLatch countDownLatch;
-
-    private Object responseValue;
-
+    private CountDownLatch countDownLatch = new CountDownLatch(2);
 
     public Client(String host, int port) {
         this.host = host;
@@ -44,13 +41,6 @@ public class Client {
 
         protocol = new Protocol();
         protocol.registerPacket((byte) 5, GetPacket.class);
-
-        packetListener = new PhenixClientPacketListener();
-
-        executorService = Executors.newSingleThreadExecutor();
-
-        responseObject = new AtomicReference<>();
-        countDownLatch = new CountDownLatch(1);
     }
 
     public void start() throws Exception {
@@ -67,18 +57,21 @@ public class Client {
 
     public Future<Object> send(Packet packet) {
         return executorService.submit(() -> {
-            responseObject.set(responseValue);
-            countDownLatch.countDown();
-
             channel.writeAndFlush(packet);
 
+            countDownLatch.countDown();
+
             try {
-                countDownLatch.await(10, TimeUnit.SECONDS);
+                countDownLatch.await(50, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             return responseObject.get();
         });
+    }
+
+    public <T> void setResponseObject(T responseObject) {
+        this.responseObject.set(responseObject);
     }
 }

@@ -19,11 +19,7 @@ public class PhenixServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
-        System.out.println("GOT SOMETHING");
-        if (packet instanceof GetPacket) {
-            System.out.println(((GetPacket) packet).getValue());
-        }
-        context.writeAndFlush(new GetPacket(1, "Object1"));
+        context.writeAndFlush(new GetPacket("Object1"));
     }
 
     @Override
