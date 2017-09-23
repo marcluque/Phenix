@@ -1,7 +1,10 @@
 package de.datasec.phenix.client;
 
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
+import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
+import de.datasec.phenix.shared.util.TimeUnit;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -22,15 +25,35 @@ public class PhenixClient {
         }
     }
 
-    public <T> T get(Object key) {
+    public <T extends Serializable> T get(T key) {
         try {
-            T t = (T) client.send(new GetPacket(key)).get();
-            //System.out.println((client.end - client.start));
-            return t;
+            return (T) client.send(new GetPacket(key)).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    public <T extends Serializable> void put(String key, T value) throws IllegalArgumentException {
+        put(key, value, true, 0, TimeUnit.MILLISECONDS);
+    }
+
+    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists) throws IllegalArgumentException {
+        put(key, value, overrideIfKeyExists, 0, TimeUnit.MILLISECONDS);
+    }
+
+    public <T extends Serializable> void put(String key, T value, long timeToLive, TimeUnit timeUnit) throws IllegalArgumentException {
+        put(key, value, true, timeToLive, timeUnit);
+    }
+
+    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists, long timeToLive, TimeUnit timeUnit) throws IllegalArgumentException {
+        if (value == null) {
+            throw new IllegalArgumentException("value cannot be null.");
+        } else if (key == null) {
+            throw new IllegalArgumentException("key cannot be null.");
+        }
+
+        client.send(new PutPacket(key, value, overrideIfKeyExists, timeToLive, timeUnit));
     }
 }

@@ -13,13 +13,25 @@ public abstract class Packet {
 
     public abstract void write(ByteBuf byteBuf);
 
+    protected void writeBoolean(ByteBuf byteBuf, boolean bool) {
+        byteBuf.writeBoolean(bool);
+    }
+
+    protected boolean readBoolean(ByteBuf byteBuf) {
+        return byteBuf.readBoolean();
+    }
+
+    protected void writeLong(ByteBuf byteBuf, long longNumber) {
+        byteBuf.writeLong(longNumber);
+    }
+
+    protected long readLong(ByteBuf byteBuf) {
+        return byteBuf.readLong();
+    }
+
     protected void writeObject(ByteBuf byteBuf, Object object) throws IOException {
         if (object == null) {
             throw new IllegalArgumentException("object cannot be null");
-        }
-
-        if (!(object instanceof Serializable)) {
-            throw new IllegalArgumentException("object does not implement Serializable interface");
         }
 
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {

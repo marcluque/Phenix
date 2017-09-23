@@ -5,6 +5,7 @@ import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.shared.packetsystem.Packet;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
+import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -40,7 +41,8 @@ public class Client {
         this.port = port;
 
         protocol = new Protocol();
-        protocol.registerPacket((byte) 5, GetPacket.class);
+        protocol.registerPacket((byte) 1, GetPacket.class);
+        protocol.registerPacket((byte) 2, PutPacket.class);
     }
 
     public void start() throws Exception {

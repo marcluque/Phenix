@@ -10,17 +10,14 @@ import java.io.IOException;
  */
 public class GetPacket extends Packet {
 
-    private int id;
-
     private Object value;
 
     public GetPacket() {
-        // Needs an empty constructor for protocol
+        // For protocol
     }
 
     public GetPacket(Object value) {
         this.value = value;
-        id = 0;
     }
 
     @Override
