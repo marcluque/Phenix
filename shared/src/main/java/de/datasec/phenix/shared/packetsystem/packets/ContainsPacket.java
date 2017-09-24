@@ -6,26 +6,36 @@ import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 
 /**
- * Created by DataSec on 05.09.2017.
+ * Created by DataSec on 24.09.2017.
  */
-public class GetPacket extends Packet {
+public class ContainsPacket extends Packet {
 
     private Object value;
 
-    public GetPacket() {
-        id = 0;
+    private byte isKey;
+
+    public ContainsPacket() {
+        id = 2;
         // For protocol
     }
 
-    public GetPacket(Object value) {
+    public ContainsPacket(Object value) {
+        this(value, (byte) -1);
+    }
+
+    public ContainsPacket(Object value, byte isKey) {
         this.value = value;
-        id = 0;
+        this.isKey = isKey;
+        id = 2;
     }
 
     @Override
     public void read(ByteBuf byteBuf) {
         try {
             value = readObject(byteBuf);
+            if (isKey != -1) {
+                isKey = readByte(byteBuf);
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -35,6 +45,9 @@ public class GetPacket extends Packet {
     public void write(ByteBuf byteBuf) {
         try {
             writeObject(byteBuf, value);
+            if (isKey != -1) {
+                writeByte(byteBuf, isKey);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,5 +55,9 @@ public class GetPacket extends Packet {
 
     public Object getValue() {
         return value;
+    }
+
+    public byte isKey() {
+        return isKey;
     }
 }

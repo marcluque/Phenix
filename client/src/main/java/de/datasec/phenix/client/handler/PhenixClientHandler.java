@@ -2,14 +2,15 @@ package de.datasec.phenix.client.handler;
 
 import de.datasec.phenix.client.listener.PhenixClientPacketListener;
 import de.datasec.phenix.shared.PacketListener;
+import de.datasec.phenix.shared.packetsystem.Packet;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * Created by DataSec on 20.09.2017.
  */
-public class PhenixClientHandler extends ChannelInboundHandlerAdapter {
+public class PhenixClientHandler extends SimpleChannelInboundHandler<Packet> {
 
     private PhenixClientPacketListener packetListener;
 
@@ -18,7 +19,7 @@ public class PhenixClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext context, Object packet) throws Exception {
+    protected void channelRead0(ChannelHandlerContext context, Packet packet) throws Exception {
         packetListener.onGetPacket((GetPacket) packet);
     }
 

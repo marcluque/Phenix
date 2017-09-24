@@ -9,9 +9,19 @@ import java.io.*;
  */
 public abstract class Packet {
 
+    public int id;
+
     public abstract void read(ByteBuf byteBuf);
 
     public abstract void write(ByteBuf byteBuf);
+
+    protected void writeByte(ByteBuf byteBuf, byte byt) {
+        byteBuf.writeByte(byt);
+    }
+
+    protected byte readByte(ByteBuf byteBuf) {
+        return byteBuf.readByte();
+    }
 
     protected void writeBoolean(ByteBuf byteBuf, boolean bool) {
         byteBuf.writeBoolean(bool);
@@ -58,5 +68,9 @@ public abstract class Packet {
         }
 
         return object;
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -1,5 +1,6 @@
 package de.datasec.phenix.server;
 
+import de.datasec.phenix.server.cache.PhenixServerCache;
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
@@ -23,14 +24,14 @@ public class Server {
 
     private PhenixServerPacketListener packetListener;
 
-    public Server(int port) {
+    public Server(int port, int cleanUpRate) {
         this.port = port;
 
         protocol = new Protocol();
         protocol.registerPacket((byte) 1, GetPacket.class);
         protocol.registerPacket((byte) 2, PutPacket.class);
 
-        packetListener = new PhenixServerPacketListener();
+        packetListener = new PhenixServerPacketListener(new PhenixServerCache(cleanUpRate));
     }
 
     public void start() throws Exception {

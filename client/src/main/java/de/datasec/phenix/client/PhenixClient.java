@@ -1,5 +1,6 @@
 package de.datasec.phenix.client;
 
+import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
 import de.datasec.phenix.shared.util.TimeUnit;
@@ -35,19 +36,19 @@ public class PhenixClient {
         return null;
     }
 
-    public <T extends Serializable> void put(String key, T value) throws IllegalArgumentException {
-        put(key, value, true, 0, TimeUnit.MILLISECONDS);
+    public <T extends Serializable> void put(String key, T value) throws Exception {
+        put(key, value, true, -1, TimeUnit.MILLISECONDS);
     }
 
-    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists) throws IllegalArgumentException {
-        put(key, value, overrideIfKeyExists, 0, TimeUnit.MILLISECONDS);
+    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists) throws Exception {
+        put(key, value, overrideIfKeyExists, -1, TimeUnit.MILLISECONDS);
     }
 
-    public <T extends Serializable> void put(String key, T value, long timeToLive, TimeUnit timeUnit) throws IllegalArgumentException {
+    public <T extends Serializable> void put(String key, T value, long timeToLive, TimeUnit timeUnit) throws Exception {
         put(key, value, true, timeToLive, timeUnit);
     }
 
-    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists, long timeToLive, TimeUnit timeUnit) throws IllegalArgumentException {
+    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists, long timeToLive, TimeUnit timeUnit) throws Exception {
         if (value == null) {
             throw new IllegalArgumentException("value cannot be null.");
         } else if (key == null) {
@@ -55,5 +56,13 @@ public class PhenixClient {
         }
 
         client.send(new PutPacket(key, value, overrideIfKeyExists, timeToLive, timeUnit));
+    }
+
+    public <T extends Serializable> boolean containsKey(T key) throws Exception {
+        if (key == null) {
+            throw new IllegalArgumentException("key cannot be null.");
+        }
+
+        return (boolean) client.send(new ContainsPacket(key, (byte) 1)).get();
     }
 }

@@ -15,7 +15,7 @@ public class PutPacket extends Packet {
 
     private Object value;
 
-    private boolean overrideIfKeyExists;
+    private byte overrideIfKeyExists;
 
     // Saved as milliseconds on server
     private long timeToLive;
@@ -23,15 +23,18 @@ public class PutPacket extends Packet {
     private TimeUnit timeUnit;
 
     public PutPacket() {
+        // TODO: USE ANNOTATION FOR ID
+        id = 1;
         // For protocol
     }
 
     public PutPacket(Object key, Object value, boolean overrideIfKeyExists, long timeToLive, TimeUnit timeUnit) {
         this.key = key;
         this.value = value;
-        this.overrideIfKeyExists = overrideIfKeyExists;
+        this.overrideIfKeyExists = (byte) (overrideIfKeyExists ? 1 : 0);
         this.timeToLive = timeToLive;
         this.timeUnit = timeUnit;
+        id = 1;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class PutPacket extends Packet {
         try {
             key = readObject(byteBuf);
             value = readObject(byteBuf);
-            overrideIfKeyExists = readBoolean(byteBuf);
+            overrideIfKeyExists = readByte(byteBuf);
             timeToLive = readLong(byteBuf);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -51,10 +54,26 @@ public class PutPacket extends Packet {
         try {
             writeObject(byteBuf, key);
             writeObject(byteBuf, value);
-            writeBoolean(byteBuf, overrideIfKeyExists);
+            writeByte(byteBuf, overrideIfKeyExists);
             writeLong(byteBuf, (timeUnit == TimeUnit.MILLISECONDS) ? timeToLive : timeToLive * 1000);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Object getKey() {
+        return key;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public byte isOverrideIfKeyExists() {
+        return overrideIfKeyExists;
+    }
+
+    public long getTimeToLive() {
+        return timeToLive;
     }
 }

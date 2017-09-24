@@ -5,12 +5,14 @@ package de.datasec.phenix.server;
  */
 public class PhenixServer {
 
-    private int port;
-
     public PhenixServer(int port) {
+        this(port,120);
+    }
+
+    public PhenixServer(int port, int cleanUpRate) {
         // Start server
         try {
-            new Server(port).start();
+            new Server(port, cleanUpRate).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
