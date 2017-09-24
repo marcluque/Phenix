@@ -21,6 +21,7 @@ public class PhenixServerPacketListener implements PacketListener {
         this.cache = cache;
     }
 
+    @Override
     public void onPacket(Packet packet) {
         switch (packet.getId()) {
             case 0:
@@ -43,6 +44,11 @@ public class PhenixServerPacketListener implements PacketListener {
 
     private void onPutPacket(PutPacket putPacket) {
         cache.put(putPacket.getKey(), putPacket.getValue(), putPacket.isOverrideIfKeyExists() == 1, putPacket.getTimeToLive());
+        if (putPacket.isOverrideIfKeyExists() == 1) {
+            System.out.println("PUT ENTRY WITH KEY: " + putPacket.getKey() + " AND VALUE: " + putPacket.getValue());
+        } else {
+            System.out.println("ENTRY WITH KEY: " + putPacket.getKey() + " already exists");
+        }
     }
 
     private void onContainsPacket(ContainsPacket packet) {

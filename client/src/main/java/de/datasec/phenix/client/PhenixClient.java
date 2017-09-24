@@ -28,7 +28,7 @@ public class PhenixClient {
 
     public <T extends Serializable> T get(T key) {
         try {
-            return (T) client.send(new GetPacket(key)).get();
+            return (T) client.sendWithFuture(new GetPacket(key)).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -36,33 +36,57 @@ public class PhenixClient {
         return null;
     }
 
-    public <T extends Serializable> void put(String key, T value) throws Exception {
+    public <K, V extends Serializable> void put(K key, V value) {
         put(key, value, true, -1, TimeUnit.MILLISECONDS);
     }
 
-    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists) throws Exception {
+    public <K, V extends Serializable> void put(K key, V value, boolean overrideIfKeyExists) {
         put(key, value, overrideIfKeyExists, -1, TimeUnit.MILLISECONDS);
     }
 
-    public <T extends Serializable> void put(String key, T value, long timeToLive, TimeUnit timeUnit) throws Exception {
+    public <K, V extends Serializable> void put(K key, V value, long timeToLive, TimeUnit timeUnit) {
         put(key, value, true, timeToLive, timeUnit);
     }
 
-    public <T extends Serializable> void put(String key, T value, boolean overrideIfKeyExists, long timeToLive, TimeUnit timeUnit) throws Exception {
+    public <K, V extends Serializable> void put(K key, V value, boolean overrideIfKeyExists, long timeToLive, TimeUnit timeUnit) {
         if (value == null) {
-            throw new IllegalArgumentException("value cannot be null.");
+            System.err.println("key cannot be null.");
+            return;
         } else if (key == null) {
-            throw new IllegalArgumentException("key cannot be null.");
+            System.err.println("key cannot be null.");
+            return;
         }
 
         client.send(new PutPacket(key, value, overrideIfKeyExists, timeToLive, timeUnit));
     }
 
-    public <T extends Serializable> boolean containsKey(T key) throws Exception {
+    public <T extends Serializable> boolean containsKey(T key) {
         if (key == null) {
-            throw new IllegalArgumentException("key cannot be null.");
+            System.err.println("key cannot be null.");
+            return false;
         }
 
-        return (boolean) client.send(new ContainsPacket(key, (byte) 1)).get();
+        try {
+            return (boolean) client.sendWithFuture(new ContainsPacket(key, (byte) 1)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public <T extends Serializable> boolean containsValue(T value) {
+        if (value == null) {
+            System.err.println("key cannot be null.");
+            return false;
+        }
+
+        try {
+            return (boolean) client.sendWithFuture(new ContainsPacket(value, (byte) 0)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

@@ -9,7 +9,7 @@ import java.io.*;
  */
 public abstract class Packet {
 
-    public int id;
+    protected int id;
 
     public abstract void read(ByteBuf byteBuf);
 

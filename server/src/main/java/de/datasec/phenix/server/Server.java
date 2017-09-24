@@ -4,6 +4,7 @@ import de.datasec.phenix.server.cache.PhenixServerCache;
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
+import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
 import io.netty.bootstrap.ServerBootstrap;
@@ -30,6 +31,7 @@ public class Server {
         protocol = new Protocol();
         protocol.registerPacket((byte) 1, GetPacket.class);
         protocol.registerPacket((byte) 2, PutPacket.class);
+        protocol.registerPacket((byte) 3, ContainsPacket.class);
 
         packetListener = new PhenixServerPacketListener(new PhenixServerCache(cleanUpRate));
     }

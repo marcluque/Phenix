@@ -4,10 +4,12 @@ import de.datasec.phenix.client.listener.PhenixClientPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -28,7 +30,7 @@ public class Client {
 
     private Protocol protocol;
 
-    private PhenixClientPacketListener packetListener = new PhenixClientPacketListener(this);
+    private PhenixClientPacketListener packetListener;
 
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -43,6 +45,9 @@ public class Client {
         protocol = new Protocol();
         protocol.registerPacket((byte) 1, GetPacket.class);
         protocol.registerPacket((byte) 2, PutPacket.class);
+        protocol.registerPacket((byte) 3, ContainsPacket.class);
+
+        packetListener = new PhenixClientPacketListener(this);
     }
 
     public void start() throws Exception {
@@ -57,14 +62,16 @@ public class Client {
         channel = bootstrap.connect(host, port).sync().channel();
     }
 
-    public Future<Object> send(Packet packet) {
-        return executorService.submit(() -> {
-            channel.writeAndFlush(packet);
+    public void send(Packet packet) {
+        channel.writeAndFlush(packet);
+    }
 
-            countDownLatch.countDown();
+    public Future<Object> sendWithFuture(Packet packet) {
+        return executorService.submit(() -> {
+            channel.writeAndFlush(packet).addListener((ChannelFutureListener) future -> countDownLatch.countDown());
 
             try {
-                countDownLatch.await(50, TimeUnit.MILLISECONDS);
+                countDownLatch.await(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

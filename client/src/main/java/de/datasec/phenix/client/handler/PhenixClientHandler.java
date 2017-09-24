@@ -3,7 +3,6 @@ package de.datasec.phenix.client.handler;
 import de.datasec.phenix.client.listener.PhenixClientPacketListener;
 import de.datasec.phenix.shared.PacketListener;
 import de.datasec.phenix.shared.packetsystem.Packet;
-import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -20,7 +19,7 @@ public class PhenixClientHandler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, Packet packet) throws Exception {
-        packetListener.onGetPacket((GetPacket) packet);
+        packetListener.onPacket(packet);
     }
 
     @Override
