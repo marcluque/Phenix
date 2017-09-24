@@ -88,6 +88,10 @@ public class PhenixServerCache<K, V> {
 
         PhenixCacheEntry<V> entry = cache.get(key);
 
+        if (entry == null) {
+            throw new IllegalArgumentException("cache entry cannot be null");
+        }
+
         long timeToLive = entry.getTimeToLive();
         if (timeToLive != -1 && timeToLive <= System.currentTimeMillis()) {
             remove(key);

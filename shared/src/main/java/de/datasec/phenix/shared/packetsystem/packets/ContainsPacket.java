@@ -33,9 +33,7 @@ public class ContainsPacket extends Packet {
     public void read(ByteBuf byteBuf) {
         try {
             value = readObject(byteBuf);
-            if (isKey != -1) {
-                isKey = readByte(byteBuf);
-            }
+            isKey = readByte(byteBuf);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -45,9 +43,7 @@ public class ContainsPacket extends Packet {
     public void write(ByteBuf byteBuf) {
         try {
             writeObject(byteBuf, value);
-            if (isKey != -1) {
-                writeByte(byteBuf, isKey);
-            }
+            writeByte(byteBuf, isKey);
         } catch (IOException e) {
             e.printStackTrace();
         }

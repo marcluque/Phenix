@@ -44,10 +44,10 @@ public class PhenixServerPacketListener implements PacketListener {
 
     private void onPutPacket(PutPacket putPacket) {
         cache.put(putPacket.getKey(), putPacket.getValue(), putPacket.isOverrideIfKeyExists() == 1, putPacket.getTimeToLive());
-        if (putPacket.isOverrideIfKeyExists() == 1) {
-            System.out.println("PUT ENTRY WITH KEY: " + putPacket.getKey() + " AND VALUE: " + putPacket.getValue());
+        if (putPacket.isOverrideIfKeyExists() == 0) {
+            System.out.println("PUT ENTRY WITH KEY: " + putPacket.getKey() + " AND VALUE: " + putPacket.getValue().toString());
         } else {
-            System.out.println("ENTRY WITH KEY: " + putPacket.getKey() + " already exists");
+            System.out.println("ENTRY WITH KEY: " + putPacket.getKey() + " will be overwritten to: " + putPacket.getValue().toString());
         }
     }
 

@@ -26,9 +26,9 @@ public class PhenixClient {
         }
     }
 
-    public <T extends Serializable> T get(T key) {
+    public <K, V extends Serializable> V get(K key) {
         try {
-            return (T) client.sendWithFuture(new GetPacket(key)).get();
+            return (V) client.sendWithFuture(new GetPacket(key)).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class PhenixClient {
         put(key, value, true, -1, TimeUnit.MILLISECONDS);
     }
 
-    public <K, V extends Serializable> void put(K key, V value, boolean overrideIfKeyExists) {
+    public <K extends Serializable, V extends Serializable> void put(K key, V value, boolean overrideIfKeyExists) {
         put(key, value, overrideIfKeyExists, -1, TimeUnit.MILLISECONDS);
     }
 
