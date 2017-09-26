@@ -4,12 +4,9 @@ import de.datasec.phenix.client.listener.PhenixClientPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.shared.packetsystem.Packet;
-import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
-import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
-import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
+import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -32,22 +29,27 @@ public class Client {
 
     private PhenixClientPacketListener packetListener;
 
+    private AtomicReference<Object> responseObject;
+
+    private CountDownLatch countDownLatch;
+
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-    private AtomicReference<Object> responseObject = new AtomicReference<>();
-
-    private CountDownLatch countDownLatch = new CountDownLatch(2);
 
     public Client(String host, int port) {
         this.host = host;
         this.port = port;
 
         protocol = new Protocol();
-        protocol.registerPacket((byte) 1, GetPacket.class);
-        protocol.registerPacket((byte) 2, PutPacket.class);
-        protocol.registerPacket((byte) 3, ContainsPacket.class);
+        protocol.registerPacket((byte) 0, GetPacket.class);
+        protocol.registerPacket((byte) 1, PutPacket.class);
+        protocol.registerPacket((byte) 2, ContainsPacket.class);
+        protocol.registerPacket((byte) 3, RemovePacket.class);
+        protocol.registerPacket((byte) 4, TypeOfPacket.class);
+        protocol.registerPacket((byte) 5, GetKeysPacket.class);
 
         packetListener = new PhenixClientPacketListener(this);
+
+        System.out.printf("Client started and connected on: %s:%d%n", host, port);
     }
 
     public void start() throws Exception {
@@ -67,8 +69,11 @@ public class Client {
     }
 
     public Future<Object> sendWithFuture(Packet packet) {
+        responseObject = new AtomicReference<>();
+        countDownLatch = new CountDownLatch(2);
+
         return executorService.submit(() -> {
-            channel.writeAndFlush(packet).addListener((ChannelFutureListener) future -> countDownLatch.countDown());
+            channel.writeAndFlush(packet).addListener(channelFutureListener  -> countDownLatch.countDown());
 
             try {
                 countDownLatch.await(1, TimeUnit.SECONDS);

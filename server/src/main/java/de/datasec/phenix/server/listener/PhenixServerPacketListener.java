@@ -3,9 +3,7 @@ package de.datasec.phenix.server.listener;
 import de.datasec.phenix.server.cache.PhenixServerCache;
 import de.datasec.phenix.shared.PacketListener;
 import de.datasec.phenix.shared.packetsystem.Packet;
-import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
-import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
-import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
+import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -33,26 +31,56 @@ public class PhenixServerPacketListener implements PacketListener {
             case 2:
                 onContainsPacket((ContainsPacket) packet);
                 break;
+            case 3:
+                onRemovePacket((RemovePacket) packet);
+                break;
+            case 4:
+                onTypeOfPacket((TypeOfPacket) packet);
+                break;
+            case 5:
+                onGetKeys();
+                break;
+            case 6:
+
             default:
                 throw new IllegalArgumentException(String.format("packet with id %d is not registered", packet.getId()));
         }
     }
 
     private void onGetPacket(GetPacket getPacket) {
-        context.writeAndFlush(new GetPacket(cache.get(getPacket.getValue())));
+        context.writeAndFlush(new GetPacket(cache.get(getPacket.getObject())));
     }
 
     private void onPutPacket(PutPacket putPacket) {
         cache.put(putPacket.getKey(), putPacket.getValue(), putPacket.isOverrideIfKeyExists() == 1, putPacket.getTimeToLive());
-        if (putPacket.isOverrideIfKeyExists() == 0) {
-            System.out.println("PUT ENTRY WITH KEY: " + putPacket.getKey() + " AND VALUE: " + putPacket.getValue().toString());
+    }
+
+    private void onContainsPacket(ContainsPacket containsPacket) {
+        context.writeAndFlush((containsPacket.isKey() == 1) ? new GetPacket(cache.containsKey(containsPacket.getObject())) : new GetPacket(cache.containsValue(containsPacket.getObject())));
+    }
+
+    private void onRemovePacket(RemovePacket removePacket) {
+        if (removePacket.getValue() instanceof Object[]) {
+            long amountRemoved = 0;
+            Object[] objects = (Object[]) removePacket.getValue();
+            for (Object object : objects) {
+                if (cache.remove(object)) {
+                    amountRemoved++;
+                }
+            }
+
+            context.writeAndFlush(new GetPacket(amountRemoved));
         } else {
-            System.out.println("ENTRY WITH KEY: " + putPacket.getKey() + " will be overwritten to: " + putPacket.getValue().toString());
+            context.writeAndFlush(new GetPacket(cache.getAndRemove(removePacket.getValue())));
         }
     }
 
-    private void onContainsPacket(ContainsPacket packet) {
-        context.writeAndFlush((packet.isKey() == 1) ? new ContainsPacket(cache.containsKey(packet.getValue())) : new ContainsPacket(cache.containsValue(packet.getValue())));
+    private void onTypeOfPacket(TypeOfPacket typeOfPacket) {
+        context.writeAndFlush(new GetPacket(cache.get(typeOfPacket.getObject()).getClass().getTypeName()));
+    }
+
+    private void onGetKeys() {
+        context.writeAndFlush(new GetPacket(cache.getKeys()));
     }
 
     public void setContext(ChannelHandlerContext context) {

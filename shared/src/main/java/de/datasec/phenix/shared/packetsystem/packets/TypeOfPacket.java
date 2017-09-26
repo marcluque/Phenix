@@ -8,18 +8,18 @@ import java.io.IOException;
 /**
  * Created by DataSec on 26.09.2017.
  */
-public class GetPacket extends Packet {
+public class TypeOfPacket extends Packet {
 
     private Object object;
 
-    public GetPacket() {
-        id = 0;
+    public TypeOfPacket() {
+        id = 4;
         // For protocol
     }
 
-    public GetPacket(Object object) {
+    public TypeOfPacket(Object object) {
         this.object = object;
-        id = 0;
+        id = 4;
     }
 
     @Override

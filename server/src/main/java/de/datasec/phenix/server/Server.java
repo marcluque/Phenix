@@ -4,9 +4,7 @@ import de.datasec.phenix.server.cache.PhenixServerCache;
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
-import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
-import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
-import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
+import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -29,11 +27,16 @@ public class Server {
         this.port = port;
 
         protocol = new Protocol();
-        protocol.registerPacket((byte) 1, GetPacket.class);
-        protocol.registerPacket((byte) 2, PutPacket.class);
-        protocol.registerPacket((byte) 3, ContainsPacket.class);
+        protocol.registerPacket((byte) 0, GetPacket.class);
+        protocol.registerPacket((byte) 1, PutPacket.class);
+        protocol.registerPacket((byte) 2, ContainsPacket.class);
+        protocol.registerPacket((byte) 3, RemovePacket.class);
+        protocol.registerPacket((byte) 4, TypeOfPacket.class);
+        protocol.registerPacket((byte) 5, GetKeysPacket.class);
 
         packetListener = new PhenixServerPacketListener(new PhenixServerCache(cleanUpRate));
+
+        System.out.println("Server started!");
     }
 
     public void start() throws Exception {

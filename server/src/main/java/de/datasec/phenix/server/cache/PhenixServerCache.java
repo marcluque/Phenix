@@ -1,7 +1,9 @@
 package de.datasec.phenix.server.cache;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -99,6 +101,12 @@ public class PhenixServerCache<K, V> {
         }
 
         return cache.get(key).getValue();
+    }
+
+    public Set<K> getKeys() {
+        Set<K> set = new HashSet<>();
+        set.addAll(cache.keySet());
+        return set;
     }
 
     public void setTimeToLive(K key, long timeToLive) {

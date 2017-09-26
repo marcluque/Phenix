@@ -1,11 +1,10 @@
 package de.datasec.phenix.client;
 
-import de.datasec.phenix.shared.packetsystem.packets.ContainsPacket;
-import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
-import de.datasec.phenix.shared.packetsystem.packets.PutPacket;
+import de.datasec.phenix.shared.packetsystem.packets.*;
 import de.datasec.phenix.shared.util.TimeUnit;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -60,7 +59,7 @@ public class PhenixClient {
         client.send(new PutPacket(key, value, overrideIfKeyExists, timeToLive, timeUnit));
     }
 
-    public <T extends Serializable> boolean containsKey(T key) {
+    public <K extends Serializable> boolean containsKey(K key) {
         if (key == null) {
             System.err.println("key cannot be null.");
             return false;
@@ -75,7 +74,7 @@ public class PhenixClient {
         return false;
     }
 
-    public <T extends Serializable> boolean containsValue(T value) {
+    public <V extends Serializable> boolean containsValue(V value) {
         if (value == null) {
             System.err.println("key cannot be null.");
             return false;
@@ -89,4 +88,74 @@ public class PhenixClient {
 
         return false;
     }
+
+    public <K extends Serializable> long remove(K... keys) {
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i] == null) {
+                System.err.printf("key at index %d cannot be null.%n", i);
+            }
+        }
+
+        try {
+            return (long) client.sendWithFuture(new RemovePacket(keys)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return -1L;
+    }
+
+    public <K, V extends Serializable> V remove(K key) {
+        if (key == null) {
+            System.err.println("key cannot be null.");
+        }
+
+        try {
+            return (V) client.sendWithFuture(new RemovePacket(key)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public <K extends Serializable> String getTypeOfValue(K key) {
+        try {
+            return client.sendWithFuture(new TypeOfPacket(key)).get().toString();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public <T extends Collection> T getKeys() {
+        try {
+            return (T) client.sendWithFuture(new GetKeysPacket()).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /*public <K extends Serializable> K getRandomKey() {
+
+    }
+
+    public <K, T extends Serializable> String rename(K oldKey, T newKey) {
+
+    }
+
+    public <K extends Serializable> long getTimeToLive(K key) {
+
+    }
+
+    public <K extends Serializable> boolean setTimeToLive(K key) {
+
+    }
+
+    public <K extends Serializable> boolean moveKey(K key, int index) {
+
+    }*/
 }
