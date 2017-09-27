@@ -46,6 +46,8 @@ public class Client {
         protocol.registerPacket((byte) 3, RemovePacket.class);
         protocol.registerPacket((byte) 4, TypeOfPacket.class);
         protocol.registerPacket((byte) 5, GetKeysPacket.class);
+        protocol.registerPacket((byte) 6, RandomKeyPacket.class);
+        protocol.registerPacket((byte) 7, RenamePacket.class);
 
         packetListener = new PhenixClientPacketListener(this);
 

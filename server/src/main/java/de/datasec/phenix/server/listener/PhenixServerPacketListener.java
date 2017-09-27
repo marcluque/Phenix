@@ -6,6 +6,9 @@ import de.datasec.phenix.shared.packetsystem.Packet;
 import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Created by DataSec on 05.09.2017.
  */
@@ -38,10 +41,14 @@ public class PhenixServerPacketListener implements PacketListener {
                 onTypeOfPacket((TypeOfPacket) packet);
                 break;
             case 5:
-                onGetKeys();
+                onGetKeysPacket();
                 break;
             case 6:
-
+                onRandomKeyPacket();
+                break;
+            case 7:
+                onRenamePacket((RenamePacket) packet);
+                break;
             default:
                 throw new IllegalArgumentException(String.format("packet with id %d is not registered", packet.getId()));
         }
@@ -79,8 +86,17 @@ public class PhenixServerPacketListener implements PacketListener {
         context.writeAndFlush(new GetPacket(cache.get(typeOfPacket.getObject()).getClass().getTypeName()));
     }
 
-    private void onGetKeys() {
+    private void onGetKeysPacket() {
         context.writeAndFlush(new GetPacket(cache.getKeys()));
+    }
+
+    private void onRandomKeyPacket() {
+        Set<Object> set = cache.getKeys();
+        context.writeAndFlush(new GetPacket(set.toArray()[ThreadLocalRandom.current().nextInt(0, set.size())]));
+    }
+
+    private void onRenamePacket(RenamePacket renamePacket) {
+        context.writeAndFlush(new GetPacket(cache.rename(renamePacket.getOldKey(), renamePacket.getNewKey())));
     }
 
     public void setContext(ChannelHandlerContext context) {

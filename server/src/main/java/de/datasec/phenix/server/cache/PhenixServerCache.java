@@ -136,4 +136,12 @@ public class PhenixServerCache<K, V> {
 
         return timeToLive != -1 ? (timeToLive - System.currentTimeMillis()) / 1000 : -1;
     }
+
+    public V rename(K oldKey, K newKey) {
+        long ttl = getTimeToLive(oldKey);
+        V value = getAndRemove(oldKey);
+        cache.put(newKey, new PhenixCacheEntry<>(value, ttl));
+        System.out.println(getKeys());
+        return value;
+    }
 }

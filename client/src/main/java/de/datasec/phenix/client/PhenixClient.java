@@ -139,15 +139,27 @@ public class PhenixClient {
         return null;
     }
 
-    /*public <K extends Serializable> K getRandomKey() {
+    public <K extends Serializable> K getRandomKey() {
+        try {
+            return (K) client.sendWithFuture(new RandomKeyPacket()).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
+        return null;
     }
 
-    public <K, T extends Serializable> String rename(K oldKey, T newKey) {
+    public <K, T extends Serializable> T rename(K oldKey, T newKey) {
+        try {
+            return (T) client.sendWithFuture(new RenamePacket(oldKey, newKey)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
+        return null;
     }
 
-    public <K extends Serializable> long getTimeToLive(K key) {
+    /*public <K extends Serializable> long getTimeToLive(K key) {
 
     }
 

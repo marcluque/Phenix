@@ -12,9 +12,8 @@ public class MainClient {
         phenixClient.put(1, "HAY", false);
         phenixClient.put(2, UUID.randomUUID(), false);
 
-        for (Object o : phenixClient.getKeys()) {
-            System.out.println(o);
-        }
+        System.out.println(phenixClient.rename(2, 4));
+        System.out.println(phenixClient.getKeys().toString());
 
         //System.out.println(phenixClient.getTypeOfValue(1));
         //System.out.println(phenixClient.getTypeOfValue(2));

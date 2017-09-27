@@ -16,7 +16,7 @@
     </modules>
 
     <name>Phenix</name>
-    <description>Phenix is an in-memory key-object caching system</description>
+    <description>Phenix is an in-memory key-oldKey caching system</description>
     <inceptionYear>2017</inceptionYear>
 
     <developers>
