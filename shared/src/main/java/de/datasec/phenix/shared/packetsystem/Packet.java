@@ -9,8 +9,6 @@ import java.io.*;
  */
 public abstract class Packet {
 
-    protected byte id;
-
     public abstract void read(ByteBuf byteBuf);
 
     public abstract void write(ByteBuf byteBuf);
@@ -21,14 +19,6 @@ public abstract class Packet {
 
     protected byte readByte(ByteBuf byteBuf) {
         return byteBuf.readByte();
-    }
-
-    protected void writeBoolean(ByteBuf byteBuf, boolean bool) {
-        byteBuf.writeBoolean(bool);
-    }
-
-    protected boolean readBoolean(ByteBuf byteBuf) {
-        return byteBuf.readBoolean();
     }
 
     protected void writeLong(ByteBuf byteBuf, long longNumber) {
@@ -68,9 +58,5 @@ public abstract class Packet {
         }
 
         return object;
-    }
-
-    public int getId() {
-        return id;
     }
 }

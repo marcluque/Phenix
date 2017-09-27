@@ -1,6 +1,7 @@
 package de.datasec.phenix.shared.packetsystem.packets;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketId;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 /**
  * Created by DataSec on 26.09.2017.
  */
+@PacketId(7)
 public class RenamePacket extends Packet {
 
     private Object oldKey;
@@ -15,14 +17,12 @@ public class RenamePacket extends Packet {
     private Object newKey;
 
     public RenamePacket() {
-        id = 7;
         // For protocol
     }
 
     public RenamePacket(Object oldKey, Object newKey) {
         this.oldKey = oldKey;
         this.newKey = newKey;
-        id = 7;
     }
 
     @Override

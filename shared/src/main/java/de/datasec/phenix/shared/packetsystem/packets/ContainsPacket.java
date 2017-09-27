@@ -1,6 +1,7 @@
 package de.datasec.phenix.shared.packetsystem.packets;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketId;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 /**
  * Created by DataSec on 26.09.2017.
  */
+@PacketId(2)
 public class ContainsPacket extends Packet {
 
     private Object object;
@@ -15,14 +17,12 @@ public class ContainsPacket extends Packet {
     private byte isKey;
 
     public ContainsPacket() {
-        id = 2;
         // For protocol
     }
 
     public ContainsPacket(Object object, byte isKey) {
         this.object = object;
         this.isKey = isKey;
-        id = 2;
     }
 
     @Override

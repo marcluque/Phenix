@@ -1,6 +1,4 @@
-package de.datasec.phenix.shared;
-
-import de.datasec.phenix.shared.packetsystem.Packet;
+package de.datasec.phenix.shared.packetsystem;
 
 /**
  * Created by DataSec on 21.09.2017.

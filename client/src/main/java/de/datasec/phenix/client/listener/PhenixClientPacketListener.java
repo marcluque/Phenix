@@ -1,8 +1,8 @@
 package de.datasec.phenix.client.listener;
 
 import de.datasec.phenix.client.Client;
-import de.datasec.phenix.shared.PacketListener;
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketListener;
 import de.datasec.phenix.shared.packetsystem.packets.GetPacket;
 
 /**
@@ -18,10 +18,12 @@ public class PhenixClientPacketListener implements PacketListener {
 
     @Override
     public void onPacket(Packet packet) {
-        if (packet.getId() == 0) {
+        byte id = client.getProtocol().getPacketId(packet);
+
+        if (id == 0) {
             client.setResponseObject(((GetPacket) packet).getObject());
         } else {
-            throw new IllegalArgumentException(String.format("packet with id %d is not registered", packet.getId()));
+            throw new IllegalArgumentException(String.format("packet with id %d is not registered", id));
         }
     }
 }

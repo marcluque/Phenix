@@ -1,8 +1,8 @@
 package de.datasec.phenix.server.handler;
 
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
-import de.datasec.phenix.shared.PacketListener;
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

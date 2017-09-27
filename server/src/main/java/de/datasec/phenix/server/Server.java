@@ -27,16 +27,17 @@ public class Server {
         this.port = port;
 
         protocol = new Protocol();
-        protocol.registerPacket((byte) 0, GetPacket.class);
-        protocol.registerPacket((byte) 1, PutPacket.class);
-        protocol.registerPacket((byte) 2, ContainsPacket.class);
-        protocol.registerPacket((byte) 3, RemovePacket.class);
-        protocol.registerPacket((byte) 4, TypeOfPacket.class);
-        protocol.registerPacket((byte) 5, GetKeysPacket.class);
-        protocol.registerPacket((byte) 6, RandomKeyPacket.class);
-        protocol.registerPacket((byte) 7, RenamePacket.class);
+        protocol.registerPacket(GetPacket.class);
+        protocol.registerPacket(PutPacket.class);
+        protocol.registerPacket(ContainsPacket.class);
+        protocol.registerPacket(RemovePacket.class);
+        protocol.registerPacket(TypeOfPacket.class);
+        protocol.registerPacket(GetKeysPacket.class);
+        protocol.registerPacket(RandomKeyPacket.class);
+        protocol.registerPacket(RenamePacket.class);
+        protocol.registerPacket(TimeToLivePacket.class);
 
-        packetListener = new PhenixServerPacketListener(new PhenixServerCache(cleanUpRate));
+        packetListener = new PhenixServerPacketListener(protocol, new PhenixServerCache(cleanUpRate));
 
         System.out.println("Server started!");
     }

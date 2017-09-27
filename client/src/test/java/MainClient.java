@@ -1,4 +1,5 @@
 import de.datasec.phenix.client.PhenixClient;
+import de.datasec.phenix.shared.util.TimeUnit;
 
 import java.util.UUID;
 
@@ -10,10 +11,9 @@ public class MainClient {
     public static void main(String[] args) {
         PhenixClient phenixClient = new PhenixClient("localhost", 8080);
         phenixClient.put(1, "HAY", false);
-        phenixClient.put(2, UUID.randomUUID(), false);
-
-        System.out.println(phenixClient.rename(2, 4));
-        System.out.println(phenixClient.getKeys().toString());
+        phenixClient.put(4, "aksdjkf", false);
+        phenixClient.put(2, UUID.randomUUID(), false, 10000, TimeUnit.MILLISECONDS);
+        phenixClient.put(3, UUID.randomUUID(), false, 9000, TimeUnit.MILLISECONDS);
 
         //System.out.println(phenixClient.getTypeOfValue(1));
         //System.out.println(phenixClient.getTypeOfValue(2));

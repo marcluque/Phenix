@@ -1,8 +1,9 @@
 package de.datasec.phenix.server.listener;
 
 import de.datasec.phenix.server.cache.PhenixServerCache;
-import de.datasec.phenix.shared.PacketListener;
+import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketListener;
 import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -14,17 +15,22 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PhenixServerPacketListener implements PacketListener {
 
+    private Protocol protocol;
+
     private PhenixServerCache cache;
 
     private ChannelHandlerContext context;
 
-    public PhenixServerPacketListener(PhenixServerCache cache) {
+    public PhenixServerPacketListener(Protocol protocol, PhenixServerCache cache) {
+        this.protocol = protocol;
         this.cache = cache;
     }
 
     @Override
     public void onPacket(Packet packet) {
-        switch (packet.getId()) {
+        byte id = protocol.getPacketId(packet);
+
+        switch (protocol.getPacketId(packet)) {
             case 0:
                 onGetPacket((GetPacket) packet);
                 break;
@@ -49,8 +55,11 @@ public class PhenixServerPacketListener implements PacketListener {
             case 7:
                 onRenamePacket((RenamePacket) packet);
                 break;
+            case 8:
+                onTimeToLivePacket((TimeToLivePacket) packet);
+                break;
             default:
-                throw new IllegalArgumentException(String.format("packet with id %d is not registered", packet.getId()));
+                throw new IllegalArgumentException(String.format("packet with id %d is not registered", id));
         }
     }
 
@@ -97,6 +106,14 @@ public class PhenixServerPacketListener implements PacketListener {
 
     private void onRenamePacket(RenamePacket renamePacket) {
         context.writeAndFlush(new GetPacket(cache.rename(renamePacket.getOldKey(), renamePacket.getNewKey())));
+    }
+
+    private void onTimeToLivePacket(TimeToLivePacket timeToLivePacket) {
+        if (timeToLivePacket.getReturnTTL() == 1) {
+            context.writeAndFlush(new GetPacket(cache.getTimeToLive(timeToLivePacket.getObject())));
+        } else {
+            context.writeAndFlush(new GetPacket(cache.setTimeToLive(timeToLivePacket.getObject(), timeToLivePacket.getTimeToLive())));
+        }
     }
 
     public void setContext(ChannelHandlerContext context) {

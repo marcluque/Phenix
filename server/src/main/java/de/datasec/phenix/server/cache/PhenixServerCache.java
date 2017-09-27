@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,31 +12,23 @@ import java.util.concurrent.TimeUnit;
  */
 public class PhenixServerCache<K, V> {
 
-    private int cleanUpRate;
-
-    private ScheduledExecutorService executorService;
-
     private Map<K, PhenixCacheEntry<V>> cache = new HashMap<>();
 
+    private Set<K> toBeRemoved = new HashSet<>();
+
     public PhenixServerCache(int cleanUpRate) {
-        this.cleanUpRate = cleanUpRate;
-
-        initCleaner();
-    }
-
-    private void initCleaner() {
-        if (cleanUpRate > 0) {
-            executorService = Executors.newScheduledThreadPool(1);
-            executorService.scheduleAtFixedRate(this::startCleaner, cleanUpRate, cleanUpRate, TimeUnit.SECONDS);
-        }
+        cleanUpRate = cleanUpRate > 0 ? cleanUpRate : 120;
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::startCleaner, cleanUpRate, cleanUpRate, TimeUnit.SECONDS);
     }
 
     private void startCleaner() {
         cache.forEach((key, value) -> {
             if (value.getTimeToLive() != -1 && value.getTimeToLive() <= System.currentTimeMillis()) {
-                remove(key);
+                toBeRemoved.add(key);
             }
         });
+        toBeRemoved.forEach(cache::remove);
+        toBeRemoved.clear();
     }
 
     public void put(K key, V value, boolean overrideIfKeyExists, long timeToLive) {
@@ -109,7 +100,7 @@ public class PhenixServerCache<K, V> {
         return set;
     }
 
-    public void setTimeToLive(K key, long timeToLive) {
+    public boolean setTimeToLive(K key, long timeToLive) {
         if (key == null) {
             throw new IllegalArgumentException("key cannot be null");
         }
@@ -117,7 +108,10 @@ public class PhenixServerCache<K, V> {
         PhenixCacheEntry<V> entry = cache.get(key);
 
         if (entry != null) {
-            entry.setTimeToLive(timeToLive);
+            entry.setTimeToLive(timeToLive >= 0 ? timeToLive + System.currentTimeMillis() : -1);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -134,14 +128,12 @@ public class PhenixServerCache<K, V> {
 
         long timeToLive = entry.getTimeToLive();
 
-        return timeToLive != -1 ? (timeToLive - System.currentTimeMillis()) / 1000 : -1;
+        return timeToLive >= 0 ? timeToLive - System.currentTimeMillis() : -1;
     }
 
     public V rename(K oldKey, K newKey) {
-        long ttl = getTimeToLive(oldKey);
-        V value = getAndRemove(oldKey);
-        cache.put(newKey, new PhenixCacheEntry<>(value, ttl));
-        System.out.println(getKeys());
-        return value;
+        PhenixCacheEntry entry = cache.remove(oldKey);
+        cache.put(newKey, entry);
+        return (V) entry.getValue();
     }
 }

@@ -1,6 +1,7 @@
 package de.datasec.phenix.shared.packetsystem.packets;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketId;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -8,18 +9,17 @@ import java.io.IOException;
 /**
  * Created by DataSec on 26.09.2017.
  */
+@PacketId(3)
 public class RemovePacket extends Packet {
 
     private Object value;
 
     public RemovePacket() {
-        id = 3;
         // For protocol
     }
 
     public RemovePacket(Object value) {
         this.value = value;
-        id = 3;
     }
 
     @Override

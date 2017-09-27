@@ -1,6 +1,7 @@
 package de.datasec.phenix.shared.packetsystem.packets;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketId;
 import de.datasec.phenix.shared.util.TimeUnit;
 import io.netty.buffer.ByteBuf;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 /**
  * Created by DataSec on 23.09.2017.
  */
+@PacketId(1)
 public class PutPacket extends Packet {
 
     private Object key;
@@ -23,8 +25,6 @@ public class PutPacket extends Packet {
     private TimeUnit timeUnit;
 
     public PutPacket() {
-        // TODO: USE ANNOTATION FOR ID
-        id = 1;
         // For protocol
     }
 
@@ -34,7 +34,6 @@ public class PutPacket extends Packet {
         this.overrideIfKeyExists = (byte) (overrideIfKeyExists ? 1 : 0);
         this.timeToLive = timeToLive;
         this.timeUnit = timeUnit;
-        id = 1;
     }
 
     @Override

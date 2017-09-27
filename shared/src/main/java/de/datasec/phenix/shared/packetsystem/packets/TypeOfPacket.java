@@ -1,6 +1,7 @@
 package de.datasec.phenix.shared.packetsystem.packets;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketId;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -8,18 +9,17 @@ import java.io.IOException;
 /**
  * Created by DataSec on 26.09.2017.
  */
+@PacketId(4)
 public class TypeOfPacket extends Packet {
 
     private Object object;
 
     public TypeOfPacket() {
-        id = 4;
         // For protocol
     }
 
     public TypeOfPacket(Object object) {
         this.object = object;
-        id = 4;
     }
 
     @Override

@@ -129,6 +129,10 @@ public class PhenixClient {
         return null;
     }
 
+    public <T extends Collection> T getValues() {
+        return null;
+    }
+
     public <T extends Collection> T getKeys() {
         try {
             return (T) client.sendWithFuture(new GetKeysPacket()).get();
@@ -159,15 +163,30 @@ public class PhenixClient {
         return null;
     }
 
-    /*public <K extends Serializable> long getTimeToLive(K key) {
+    /**
+     * @param key
+     * @param <K>
+     * @return 0, if key no longer exists. -1, if key is supposed to live for ever.
+     */
+    public <K extends Serializable> long getTimeToLive(K key) {
+        try {
+            return (long) client.sendWithFuture(new TimeToLivePacket(key, (byte) 1)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
+        return -1L;
     }
 
-    public <K extends Serializable> boolean setTimeToLive(K key) {
+    public <K extends Serializable> boolean setTimeToLive(K key, long timeToLive) {
+        try {
+            return (boolean) client.sendWithFuture(new TimeToLivePacket(key, timeToLive, (byte) 0)).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
+        return false;
     }
 
-    public <K extends Serializable> boolean moveKey(K key, int index) {
-
-    }*/
+    // TODO: Return ordered keySet and valueSet, if all of the elements have the interface comparable
 }

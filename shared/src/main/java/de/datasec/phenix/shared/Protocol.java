@@ -1,6 +1,7 @@
 package de.datasec.phenix.shared;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
+import de.datasec.phenix.shared.packetsystem.PacketId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +15,12 @@ public class Protocol {
 
     private Map<Class<? extends Packet>, Byte> packetBytes = new HashMap<>();
 
-    public void registerPacket(byte id, Class<? extends Packet> clazz) {
+    public void registerPacket(Class<? extends Packet> clazz) {
         if(clazz == null) {
             throw new IllegalArgumentException("clazz cannot be null");
         }
+
+        byte id = clazz.getAnnotation(PacketId.class).value();
 
         if (packets.containsKey(id)) {
             throw new IllegalArgumentException("Packet with id " + id + " is already registered!");
