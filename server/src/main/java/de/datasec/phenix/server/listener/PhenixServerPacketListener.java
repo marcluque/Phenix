@@ -58,6 +58,8 @@ public class PhenixServerPacketListener implements PacketListener {
             case 8:
                 onTimeToLivePacket((TimeToLivePacket) packet);
                 break;
+            case 9:
+                onGetValuesPacket();
             default:
                 throw new IllegalArgumentException(String.format("packet with id %d is not registered", id));
         }
@@ -114,6 +116,10 @@ public class PhenixServerPacketListener implements PacketListener {
         } else {
             context.writeAndFlush(new GetPacket(cache.setTimeToLive(timeToLivePacket.getObject(), timeToLivePacket.getTimeToLive())));
         }
+    }
+
+    private void onGetValuesPacket() {
+        context.writeAndFlush(new GetPacket(cache.getValues()));
     }
 
     public void setContext(ChannelHandlerContext context) {

@@ -36,6 +36,7 @@ public class Server {
         protocol.registerPacket(RandomKeyPacket.class);
         protocol.registerPacket(RenamePacket.class);
         protocol.registerPacket(TimeToLivePacket.class);
+        protocol.registerPacket(GetValuesPacket.class);
 
         packetListener = new PhenixServerPacketListener(protocol, new PhenixServerCache(cleanUpRate));
 

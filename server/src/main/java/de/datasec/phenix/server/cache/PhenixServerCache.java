@@ -100,6 +100,12 @@ public class PhenixServerCache<K, V> {
         return set;
     }
 
+    public Set<V> getValues() {
+        Set<V> set = new HashSet<>();
+        cache.values().forEach(entry -> set.add(entry.getValue()));
+        return set;
+    }
+
     public boolean setTimeToLive(K key, long timeToLive) {
         if (key == null) {
             throw new IllegalArgumentException("key cannot be null");

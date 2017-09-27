@@ -2,6 +2,7 @@ package de.datasec.phenix.shared.packetsystem.packets;
 
 import de.datasec.phenix.shared.packetsystem.Packet;
 import de.datasec.phenix.shared.packetsystem.PacketId;
+import de.datasec.phenix.shared.util.TimeUnit;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -27,10 +28,10 @@ public class TimeToLivePacket extends Packet {
         this.returnTTL = returnTTL;
     }
 
-    public TimeToLivePacket(Object object, long timeToLive, byte returnTTL) {
+    public TimeToLivePacket(Object object, byte returnTTL, long timeToLive, TimeUnit timeUnit) {
         this.object = object;
-        this.timeToLive = timeToLive;
         this.returnTTL = returnTTL;
+        this.timeToLive = (timeUnit == TimeUnit.MILLISECONDS) ? timeToLive : timeToLive * 1000;
     }
 
     @Override

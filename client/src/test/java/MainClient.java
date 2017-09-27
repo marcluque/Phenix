@@ -15,6 +15,9 @@ public class MainClient {
         phenixClient.put(2, UUID.randomUUID(), false, 10000, TimeUnit.MILLISECONDS);
         phenixClient.put(3, UUID.randomUUID(), false, 9000, TimeUnit.MILLISECONDS);
 
+
+        phenixClient.put();
+
         //System.out.println(phenixClient.getTypeOfValue(1));
         //System.out.println(phenixClient.getTypeOfValue(2));
         //System.out.println(phenixClient.get(1).toString());

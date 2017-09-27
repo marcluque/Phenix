@@ -22,8 +22,6 @@ public class PutPacket extends Packet {
     // Saved as milliseconds on server
     private long timeToLive;
 
-    private TimeUnit timeUnit;
-
     public PutPacket() {
         // For protocol
     }
@@ -32,8 +30,7 @@ public class PutPacket extends Packet {
         this.key = key;
         this.value = value;
         this.overrideIfKeyExists = (byte) (overrideIfKeyExists ? 1 : 0);
-        this.timeToLive = timeToLive;
-        this.timeUnit = timeUnit;
+        this.timeToLive = (timeUnit == TimeUnit.MILLISECONDS) ? timeToLive : timeToLive * 1000;
     }
 
     @Override
@@ -54,7 +51,7 @@ public class PutPacket extends Packet {
             writeObject(byteBuf, key);
             writeObject(byteBuf, value);
             writeByte(byteBuf, overrideIfKeyExists);
-            writeLong(byteBuf, (timeUnit == TimeUnit.MILLISECONDS) ? timeToLive : timeToLive * 1000);
+            writeLong(byteBuf, timeToLive);
         } catch (IOException e) {
             e.printStackTrace();
         }
