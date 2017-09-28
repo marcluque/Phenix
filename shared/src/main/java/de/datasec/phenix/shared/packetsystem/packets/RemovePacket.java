@@ -12,20 +12,20 @@ import java.io.IOException;
 @PacketId(3)
 public class RemovePacket extends Packet {
 
-    private Object value;
+    private Object object;
 
     public RemovePacket() {
         // For protocol
     }
 
-    public RemovePacket(Object value) {
-        this.value = value;
+    public RemovePacket(Object object) {
+        this.object = object;
     }
 
     @Override
     public void read(ByteBuf byteBuf) {
         try {
-            value = readObject(byteBuf);
+            object = readObject(byteBuf);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -34,13 +34,13 @@ public class RemovePacket extends Packet {
     @Override
     public void write(ByteBuf byteBuf) {
         try {
-            writeObject(byteBuf, value);
+            writeObject(byteBuf, object);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Object getValue() {
-        return value;
+    public Object getObject() {
+        return object;
     }
 }

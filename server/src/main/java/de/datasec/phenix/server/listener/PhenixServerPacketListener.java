@@ -30,7 +30,7 @@ public class PhenixServerPacketListener implements PacketListener {
     public void onPacket(Packet packet) {
         byte id = protocol.getPacketId(packet);
 
-        switch (protocol.getPacketId(packet)) {
+        switch (id) {
             case 0:
                 onGetPacket((GetPacket) packet);
                 break;
@@ -78,9 +78,9 @@ public class PhenixServerPacketListener implements PacketListener {
     }
 
     private void onRemovePacket(RemovePacket removePacket) {
-        if (removePacket.getValue() instanceof Object[]) {
+        if (removePacket.getObject() instanceof Object[]) {
             long amountRemoved = 0;
-            Object[] objects = (Object[]) removePacket.getValue();
+            Object[] objects = (Object[]) removePacket.getObject();
             for (Object object : objects) {
                 if (cache.remove(object)) {
                     amountRemoved++;
@@ -89,7 +89,7 @@ public class PhenixServerPacketListener implements PacketListener {
 
             context.writeAndFlush(new GetPacket(amountRemoved));
         } else {
-            context.writeAndFlush(new GetPacket(cache.getAndRemove(removePacket.getValue())));
+            context.writeAndFlush(new GetPacket(cache.getAndRemove(removePacket.getObject())));
         }
     }
 

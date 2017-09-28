@@ -34,9 +34,7 @@ public class PhenixServerCache<K, V> {
     public void put(K key, V value, boolean overrideIfKeyExists, long timeToLive) {
         if (key == null) {
             throw new IllegalArgumentException("key cannot be null");
-        }
-
-        if (value == null) {
+        } else if (value == null) {
             throw new IllegalArgumentException("value cannot be null");
         }
 
@@ -52,7 +50,7 @@ public class PhenixServerCache<K, V> {
     }
 
     public boolean containsKey(K key) {
-        return get(key) != null;
+        return cache.containsKey(key);
     }
 
     public boolean containsValue(V value) {
@@ -67,11 +65,11 @@ public class PhenixServerCache<K, V> {
     }
 
     public boolean remove(K key) {
-        return getAndRemove(key) != null;
+        return cache.remove(key) != null;
     }
 
     public V getAndRemove(K key) {
-        return get(key) != null ? cache.remove(key).getValue() : null;
+        return cache.containsKey(key) ? cache.remove(key).getValue() : null;
     }
 
     public V get(K key) {
@@ -87,11 +85,11 @@ public class PhenixServerCache<K, V> {
 
         long timeToLive = entry.getTimeToLive();
         if (timeToLive != -1 && timeToLive <= System.currentTimeMillis()) {
-            remove(key);
+            cache.remove(key);
             return null;
         }
 
-        return cache.get(key).getValue();
+        return entry.getValue();
     }
 
     public Set<K> getKeys() {
@@ -138,8 +136,6 @@ public class PhenixServerCache<K, V> {
     }
 
     public V rename(K oldKey, K newKey) {
-        PhenixCacheEntry entry = cache.remove(oldKey);
-        cache.put(newKey, entry);
-        return (V) entry.getValue();
+        return cache.put(newKey, cache.remove(oldKey)).getValue();
     }
 }

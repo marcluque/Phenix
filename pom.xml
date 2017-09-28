@@ -8,6 +8,7 @@
     <artifactId>phenix</artifactId>
     <packaging>pom</packaging>
     <version>1.0.1-SNAPSHOT</version>
+
     <modules>
         <module>server</module>
         <module>shared</module>
@@ -15,7 +16,7 @@
     </modules>
 
     <name>Phenix</name>
-    <description>Phenix is an in-memory key-value caching system</description>
+    <description>Phenix is an in-memory key-object caching system</description>
     <inceptionYear>2017</inceptionYear>
 
     <developers>
