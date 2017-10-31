@@ -21,13 +21,13 @@ public class PhenixChannelInitializer extends ChannelInitializer<SocketChannel> 
 
     private boolean isServer;
 
-    private Protocol packetProtocol;
+    private Protocol protocol;
 
     private PacketListener packetListener;
 
-    public PhenixChannelInitializer(boolean isServer, Protocol packetProtocol, PacketListener packetListener) {
+    public PhenixChannelInitializer(boolean isServer, Protocol protocol, PacketListener packetListener) {
         this.isServer = isServer;
-        this.packetProtocol = packetProtocol;
+        this.protocol = protocol;
         packetListener = isServer ? (PhenixServerPacketListener) packetListener : (PhenixClientPacketListener) packetListener;
         this.packetListener = packetListener;
     }
@@ -38,11 +38,11 @@ public class PhenixChannelInitializer extends ChannelInitializer<SocketChannel> 
 
         // In
         pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
-        pipeline.addLast(new PacketDecoder(packetProtocol));
+        pipeline.addLast(new PacketDecoder(protocol));
 
         // Out
         pipeline.addLast(new LengthFieldPrepender(4));
-        pipeline.addLast(new PacketEncoder(packetProtocol));
+        pipeline.addLast(new PacketEncoder(protocol));
 
         pipeline.addLast(isServer ? new PhenixServerHandler(packetListener) : new PhenixClientHandler(packetListener));
     }

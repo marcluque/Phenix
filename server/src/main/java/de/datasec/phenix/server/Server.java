@@ -59,7 +59,6 @@ public class Server {
 
             ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
 
-            // Wait until the server socket is closed
             channelFuture.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

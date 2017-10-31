@@ -23,7 +23,7 @@ public class Protocol {
         byte id = clazz.getAnnotation(PacketId.class).value();
 
         if (packets.containsKey(id)) {
-            throw new IllegalArgumentException("Packet with id " + id + " is already registered!");
+            throw new IllegalArgumentException(String.format("Packet with id %s is already registered!", id));
         }
 
         packets.put(id, clazz);

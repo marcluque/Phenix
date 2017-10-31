@@ -168,12 +168,8 @@ public class PhenixClient {
         return null;
     }
 
-    /**
-     * @param key
-     * @param <K>
-     * @return 0, if key no longer exists. -1, if key is supposed to live for ever.
-     */
     public <K> long getTimeToLive(K key) {
+        // returns 0, if key no longer exists. -1, if key is supposed to live for ever
         try {
             return (long) client.sendWithFuture(new TimeToLivePacket(key, (byte) 1)).get();
         } catch (InterruptedException | ExecutionException e) {
