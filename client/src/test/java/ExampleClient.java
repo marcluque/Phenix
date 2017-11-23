@@ -12,7 +12,6 @@ public class ExampleClient {
     public static void main(String[] args) {
         PhenixClient phenixClient = new PhenixClient("localhost", 8888);
 
-
         UUID inputUuid = UUID.randomUUID();
         // By default when a key already exists it's overridden and the time to live set to infinite, which could be set
         // manually by setting the time to live to -1
@@ -85,7 +84,7 @@ public class ExampleClient {
 
         // This method returns the time that is left to live for the object
         // It returns the amount of time in milliseconds
-        // -1 in this case stands for inanity
+        // -1 in this case stands for infinity
         long timeToLive = phenixClient.getTimeToLive("key_2");
         System.out.println("Time to live: " + timeToLive + " ms");
 
@@ -97,7 +96,9 @@ public class ExampleClient {
         System.out.println("\nDeleted UUID: " + deletedUuid);
         System.out.println("UUID equal: " + (deletedUuid.compareTo(outputUuid) == 0));
 
-        //
+
+        // This method takes several keys that are supposed to be removed and returns the amount of keys that
+        // couldn't be removed, as they most likely don't exist
         long amountNotRemoved = phenixClient.remove("key_1", "key_2");
         System.out.println("\nAmount not removed: " + amountNotRemoved);
     }

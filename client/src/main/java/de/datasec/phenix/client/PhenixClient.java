@@ -196,4 +196,5 @@ public class PhenixClient {
     }
 
     // TODO: Return ordered keySet and valueSet, if all of the elements have the interface comparable
+    // TODO: Add serialization method in order to be able to store custom objects/classes
 }
