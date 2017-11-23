@@ -16,14 +16,11 @@ import io.netty.handler.codec.LengthFieldPrepender;
  */
 public class PhenixChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private boolean isServer;
-
     private Protocol protocol;
 
     private PacketListener packetListener;
 
-    public PhenixChannelInitializer(boolean isServer, Protocol protocol, PacketListener packetListener) {
-        this.isServer = isServer;
+    public PhenixChannelInitializer(Protocol protocol, PacketListener packetListener) {
         this.protocol = protocol;
         this.packetListener = packetListener;
     }

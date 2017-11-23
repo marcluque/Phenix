@@ -62,7 +62,7 @@ public class Client {
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
-                .handler(new PhenixChannelInitializer(false, protocol, packetListener));
+                .handler(new PhenixChannelInitializer(protocol, packetListener));
 
         // Start the client
         channel = bootstrap.connect(host, port).sync().channel();

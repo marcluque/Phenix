@@ -1,7 +1,7 @@
 package de.datasec.phenix.server;
 
-import de.datasec.phenix.client.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.server.cache.PhenixServerCache;
+import de.datasec.phenix.server.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.packetsystem.packets.*;
@@ -59,7 +59,7 @@ public class Server {
             ServerBootstrap serverBootstrap = new ServerBootstrap()
                     .group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new PhenixChannelInitializer(true, protocol, packetListener))
+                    .childHandler(new PhenixChannelInitializer(protocol, packetListener))
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
