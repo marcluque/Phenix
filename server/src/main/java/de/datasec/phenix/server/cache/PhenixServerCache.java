@@ -136,6 +136,13 @@ public class PhenixServerCache<K, V> {
     }
 
     public V rename(K oldKey, K newKey) {
-        return cache.put(newKey, cache.remove(oldKey)).getValue();
+        if (newKey == null || oldKey == null) {
+            throw new IllegalArgumentException("key cannot be null");
+        }
+
+        PhenixCacheEntry<V> entry;
+        cache.put(newKey, entry = cache.remove(oldKey));
+
+        return entry.getValue();
     }
 }

@@ -3,7 +3,7 @@ package de.datasec.phenix.client;
 import de.datasec.phenix.shared.packetsystem.packets.*;
 import de.datasec.phenix.shared.util.TimeUnit;
 
-import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -134,7 +134,7 @@ public class PhenixClient {
         return null;
     }
 
-    public <T extends Collection> T getValues() {
+    public <T extends Set> T getValues() {
         try {
             return (T) client.sendWithFuture(new GetValuesPacket()).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -144,7 +144,7 @@ public class PhenixClient {
         return null;
     }
 
-    public <T extends Collection> T getKeys() {
+    public <T extends Set> T getKeys() {
         try {
             return (T) client.sendWithFuture(new GetKeysPacket()).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -164,7 +164,7 @@ public class PhenixClient {
         return null;
     }
 
-    public <K, T> T rename(K oldKey, T newKey) {
+    public <K, T> T rename(K oldKey, K newKey) {
         try {
             return (T) client.sendWithFuture(new RenamePacket(oldKey, newKey)).get();
         } catch (InterruptedException | ExecutionException e) {

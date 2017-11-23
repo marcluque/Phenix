@@ -45,6 +45,7 @@ public class Server {
         System.out.println("Server started!");
     }
 
+    // TODO: Test functionality of host on VPS
     public Server(String host, int port, int cleanUpRate) {
         this(port, cleanUpRate);
         this.host = host;
@@ -63,7 +64,6 @@ public class Server {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .option(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-
 
             ChannelFuture channelFuture = host == null ? serverBootstrap.bind(port).sync() : serverBootstrap.bind(host, port).sync();
             channelFuture.channel().closeFuture().sync();

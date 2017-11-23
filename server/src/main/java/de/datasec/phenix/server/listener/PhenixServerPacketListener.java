@@ -26,6 +26,7 @@ public class PhenixServerPacketListener implements PacketListener {
         this.cache = cache;
     }
 
+    // TODO: Probably start to support filter options, when querying for specific keys or values
     @Override
     public void onPacket(Packet packet) {
         byte id = protocol.getPacketId(packet);
@@ -60,6 +61,7 @@ public class PhenixServerPacketListener implements PacketListener {
                 break;
             case 9:
                 onGetValuesPacket();
+                break;
             default:
                 throw new IllegalArgumentException(String.format("packet with id %d is not registered", id));
         }
@@ -107,7 +109,9 @@ public class PhenixServerPacketListener implements PacketListener {
     }
 
     private void onRenamePacket(RenamePacket renamePacket) {
-        context.writeAndFlush(new GetPacket(cache.rename(renamePacket.getOldKey(), renamePacket.getNewKey())));
+        Object obj = cache.rename(renamePacket.getOldKey(), renamePacket.getNewKey());
+        System.out.println(obj);
+        context.writeAndFlush(new GetPacket(obj));
     }
 
     private void onTimeToLivePacket(TimeToLivePacket timeToLivePacket) {
