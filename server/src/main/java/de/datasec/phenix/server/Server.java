@@ -1,9 +1,9 @@
 package de.datasec.phenix.server;
 
+import de.datasec.phenix.client.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.server.cache.PhenixServerCache;
 import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
-import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -18,6 +18,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class Server {
 
     private int port;
+
+    private String host = null;
 
     private Protocol protocol;
 
@@ -43,6 +45,11 @@ public class Server {
         System.out.println("Server started!");
     }
 
+    public Server(String host, int port, int cleanUpRate) {
+        this(port, cleanUpRate);
+        this.host = host;
+    }
+
     public void start() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -57,8 +64,8 @@ public class Server {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
 
+            ChannelFuture channelFuture = host == null ? serverBootstrap.bind(port).sync() : serverBootstrap.bind(host, port).sync();
             channelFuture.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

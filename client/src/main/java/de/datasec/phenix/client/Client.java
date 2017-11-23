@@ -1,8 +1,8 @@
 package de.datasec.phenix.client;
 
+import de.datasec.phenix.client.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.client.listener.PhenixClientPacketListener;
 import de.datasec.phenix.shared.Protocol;
-import de.datasec.phenix.shared.initializer.PhenixChannelInitializer;
 import de.datasec.phenix.shared.packetsystem.Packet;
 import de.datasec.phenix.shared.packetsystem.packets.*;
 import io.netty.bootstrap.Bootstrap;

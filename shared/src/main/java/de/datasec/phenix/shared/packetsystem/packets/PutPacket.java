@@ -30,7 +30,7 @@ public class PutPacket extends Packet {
         this.key = key;
         this.value = value;
         this.overrideIfKeyExists = (byte) (overrideIfKeyExists ? 1 : 0);
-        this.timeToLive = (timeUnit == TimeUnit.MILLISECONDS) ? timeToLive : timeToLive * 1000;
+        adjustTimeToLive(timeToLive, timeUnit);
     }
 
     @Override
@@ -54,6 +54,23 @@ public class PutPacket extends Packet {
             writeLong(byteBuf, timeToLive);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void adjustTimeToLive(long timeToLive, TimeUnit timeUnit) {
+        switch (timeUnit) {
+            case MILLISECONDS:
+                this.timeToLive = timeToLive;
+                break;
+            case SECONDS:
+                this.timeToLive = timeToLive * 1000;
+                break;
+            case MINUTES:
+                this.timeToLive = timeToLive * 1000 * 60;
+                break;
+            case HOURS:
+                this.timeToLive = timeToLive * 1000 * 60 * 60;
+                break;
         }
     }
 

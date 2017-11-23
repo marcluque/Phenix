@@ -1,9 +1,6 @@
-package de.datasec.phenix.shared.initializer;
+package de.datasec.phenix.client.initializer;
 
 import de.datasec.phenix.client.handler.PhenixClientHandler;
-import de.datasec.phenix.client.listener.PhenixClientPacketListener;
-import de.datasec.phenix.server.handler.PhenixServerHandler;
-import de.datasec.phenix.server.listener.PhenixServerPacketListener;
 import de.datasec.phenix.shared.Protocol;
 import de.datasec.phenix.shared.packetsystem.PacketListener;
 import de.datasec.phenix.shared.packetsystem.serialize.PacketDecoder;
@@ -19,16 +16,12 @@ import io.netty.handler.codec.LengthFieldPrepender;
  */
 public class PhenixChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private boolean isServer;
-
     private Protocol protocol;
 
     private PacketListener packetListener;
 
-    public PhenixChannelInitializer(boolean isServer, Protocol protocol, PacketListener packetListener) {
-        this.isServer = isServer;
+    public PhenixChannelInitializer(Protocol protocol, PacketListener packetListener) {
         this.protocol = protocol;
-        packetListener = isServer ? (PhenixServerPacketListener) packetListener : (PhenixClientPacketListener) packetListener;
         this.packetListener = packetListener;
     }
 
@@ -44,6 +37,6 @@ public class PhenixChannelInitializer extends ChannelInitializer<SocketChannel> 
         pipeline.addLast(new LengthFieldPrepender(4));
         pipeline.addLast(new PacketEncoder(protocol));
 
-        pipeline.addLast(isServer ? new PhenixServerHandler(packetListener) : new PhenixClientHandler(packetListener));
+        pipeline.addLast(new PhenixClientHandler(packetListener));
     }
 }

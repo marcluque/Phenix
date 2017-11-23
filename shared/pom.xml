@@ -5,7 +5,7 @@
     <parent>
         <artifactId>phenix</artifactId>
         <groupId>de.datasec</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,20 +17,6 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.5.Final</version>
-        </dependency>
-
-        <!-- Phenix client -->
-        <dependency>
-            <groupId>de.datasec</groupId>
-            <artifactId>phenix-client</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Phenix server -->
-        <dependency>
-            <groupId>de.datasec</groupId>
-            <artifactId>phenix-server</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

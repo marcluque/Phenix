@@ -24,6 +24,12 @@ public class PhenixClient {
         }
     }
 
+    /**
+     * Searches for the corresponding value to the key.
+     *
+     * @param key The key that is supposed to be the match of the wanted value.
+     * @return Returns the corresponding value to the key. If the key is not in the cache, it returns null.
+     */
     public <K, V> V get(K key) {
         try {
             return (V) client.sendWithFuture(new GetPacket(key)).get();

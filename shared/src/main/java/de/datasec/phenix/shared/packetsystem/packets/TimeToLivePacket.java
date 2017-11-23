@@ -31,7 +31,7 @@ public class TimeToLivePacket extends Packet {
     public TimeToLivePacket(Object object, byte returnTTL, long timeToLive, TimeUnit timeUnit) {
         this.object = object;
         this.returnTTL = returnTTL;
-        this.timeToLive = (timeUnit == TimeUnit.MILLISECONDS) ? timeToLive : timeToLive * 1000;
+        adjustTimeToLive(timeToLive, timeUnit);
     }
 
     @Override
@@ -57,6 +57,23 @@ public class TimeToLivePacket extends Packet {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void adjustTimeToLive(long timeToLive, TimeUnit timeUnit) {
+        switch (timeUnit) {
+            case MILLISECONDS:
+                this.timeToLive = timeToLive;
+                break;
+            case SECONDS:
+                this.timeToLive = timeToLive * 1000;
+                break;
+            case MINUTES:
+                this.timeToLive = timeToLive * 1000 * 60;
+                break;
+            case HOURS:
+                this.timeToLive = timeToLive * 1000 * 60 * 60;
+                break;
         }
     }
 
