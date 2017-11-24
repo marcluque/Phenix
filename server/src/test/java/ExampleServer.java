@@ -1,4 +1,4 @@
-package de.datasec.phenix.server;
+import de.datasec.phenix.server.PhenixServer;
 
 /**
  * Created by DataSec on 23.11.2017.
